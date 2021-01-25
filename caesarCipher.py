@@ -28,7 +28,7 @@ def caesarCipherDecryption(cipherText,number):
         plainText+=lookUp_2[value%26]
     return plainText
 
-cipherText=caesarCipherEncryption('a',3)
+cipherText=caesarCipherEncryption('b',3)
 print('cipher text -> '+cipherText)
 plainText=caesarCipherDecryption(cipherText,3)
 print('plain text -> '+plainText)
