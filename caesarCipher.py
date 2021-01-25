@@ -17,5 +17,5 @@ def caesarCipher(plainText,number):
         cipherText+=lookUp_2[(lookUp_1[i]+number)%26] 
     return cipherText
 
-print('cipher text -> '+caesarCipher('ABCZ',3)) # DEF   
+print('cipher text -> '+caesarCipher('ABCZ',3)) #  cipher text -> DEFC
 
