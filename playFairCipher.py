@@ -43,7 +43,6 @@ def pairOfTwo(string):  # to modify the plain text format
         else: 
             finalArray.append(temp)
             temp=''
-
     if len(temp)==1: 
         temp+='X'
     finalArray.append(temp)
