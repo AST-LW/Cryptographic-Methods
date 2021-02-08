@@ -45,20 +45,18 @@ def matrixConverter(string,flag=False,dimension=None):  # input is string, outpu
                 string=string[dimension:]
             return finalMatrix
 
-def matrixTranspose(matrix):  # transpose of a matrix
-    tMatrix=[] 
-    i,j=0,0
-    temp=[]
-    while j<len(matrix):  # for non square matries (m*n, m!=n) use j<=len(matrix)
-        if i<len(matrix): 
-            temp.append(matrix[i][j])
-            i+=1 
-        else: 
-            tMatrix.append(temp)
-            i=0
-            j+=1
-            temp=[]
-    return tMatrix
+def matrixTranspose(matrix): 
+    tMatrix=[]
+    rows,columns=len(matrix),len(matrix[0])
+    for i in range(columns): 
+        temp=[] 
+        for j in range(rows): 
+            temp.append(0)
+        tMatrix.append(temp)
+    for i in range(columns): 
+        for j in range(rows): 
+            tMatrix[i][j]=matrix[j][i]
+    return tMatrix    
 
 def multiplicationOperation(keyMatrix,plainMatrix,flag=False):  # matrix multiplication
     if flag==False:
@@ -161,7 +159,7 @@ def hillCipherDecrypt(cipherText,key):  # decryption
     plainText=''
     for i in cipherText:
         plainText+=multiplicationOperation(inverseKeyMatrix,i,False)
-    return plainText
+    return plainText.replace('X','')
 
 print('cipher text -> '+hillCipherEncrypt('HOWAREYOU','RRFVSVCCT'))    # the condition for key, (d*d^-1)%26=1 where d is determinant and d^-1 is inverse of determinant
 print('plain text -> '+hillCipherDecrypt('ZDSXAGSGO','RRFVSVCCT'))     
