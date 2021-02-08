@@ -78,7 +78,6 @@ def multiplicationOperation(keyMatrix,plainMatrix,flag=False):  # matrix multipl
     if flag==True: 
         result=''
 
-
 def multiplicativeInverse(number):   # used for finding modular inverse
     # if abs(number)<26: 
     #     return abs(number)
@@ -86,7 +85,6 @@ def multiplicativeInverse(number):   # used for finding modular inverse
         if (number*i)%26==1: 
             return i
        
-
 def det(matrix,flag=False):  # pass False to calculate the det value of n*n matrix, True for cofactor matrix
     if len(matrix)!=len(matrix[0]):
         return 'NOT SQUARE MATRIX'
