@@ -1,4 +1,7 @@
 # columnar transposition cipher uses permutations of characters in message
+# key should have non-repetitive characters
+# try to avoid letters with 'x' because, the filler letter used here is 'x'
+# to use character 'x' change the filler letter with some other character
 
 def changeKeyFormat(key): 
     lookUp={}
