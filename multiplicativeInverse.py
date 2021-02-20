@@ -16,7 +16,7 @@ def multiplicativeInverse(number,modulo):
         divisor=remainder
     return t1+modulo if t1<0 else t1
 
-print('the inverse of {0} mod {1} is '.format(3,392)+str(multiplicativeInverse(27,392)))
+print('the inverse of {0} mod {1} is '.format(27,392)+str(multiplicativeInverse(27,392)))
  
 # output:- 
 
