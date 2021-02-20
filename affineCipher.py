@@ -1,5 +1,9 @@
 # c=a*(p+b)mod26 
 # p=a^-1(c-b)mod26
+
+# key depends on a and b 
+# a and 26 (coz, considering only 26 characters) are co-primes
+# b can be from 0 to M-1 (M are number of characters)
  
 lookUp={'A':0,'B':1,'C':2,'D':3,'E':4,'F':5,'G':6,
           'H':7,'I':8,'J':9,'K':10,'L':11,'M':12,'N':13,
