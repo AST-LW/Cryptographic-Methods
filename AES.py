@@ -803,3 +803,6 @@ main()
 end=time()
 
 print(end-start)  
+
+# the main problem is the key
+# generate the key using hash function (128 bit key size)
