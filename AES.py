@@ -42,6 +42,7 @@
 
 from time import time,sleep
 import sys
+from md5 import Md5
 
 # AES algorithm:-
 
@@ -474,7 +475,8 @@ class AES:
         
     def key_expansion(self,key=None): # default key=None     # main-method 3 
         if self.encrypt==True: 
-            key_hexformat=self.convert_key_to_hexformat()
+            # key_hexformat=self.convert_key_to_hexformat()
+            key_hexformat=self.key
             key_matrix=self.state_matrix(key_hexformat)
             self.key_list.extend(key_matrix) # not append, but use extend
             i=0
@@ -499,7 +501,9 @@ class AES:
                 temp_1.append(self.matrix_transpose(i))
             self.key_list=temp_1
         else:
-            key_hexformat=self.convert_key_to_hexformat(key)
+            # key_hexformat=self.convert_key_to_hexformat(key)
+            print('key on decryption:- '+key)
+            key_hexformat=key
             key_matrix=self.state_matrix(key_hexformat)
             self.key_decrypt_list.extend(key_matrix)
             i=0
@@ -717,8 +721,8 @@ class AES:
         self.encrypt=True  # make true when encryption...
         self.message=message
         self.key=key
-        hex_string=self.convert_plaintext_to_hexformat()                
-        print(hex_string)
+        hex_string=self.convert_plaintext_to_hexformat()   
+        print('message in hex format:-'+hex_string)             
         input_state_matrix=list()
         for block in self.state_matrix(hex_string):
             input_state_matrix.append(self.matrix_transpose(block))
@@ -780,16 +784,18 @@ class AES:
         
 def encryption():
     crypto=AES()
-    message='nametarunxxxxxxx'
-    key='abcdefghijklmnop'
+    message='hellop'
+    key=Md5('hello').hash()
+    print('key:-'+key) 
     print(crypto.encryption(message,key))
 
 def decryption(): 
     crypto=AES()
-    message='m'
-    key='abcdefghijklmnop'
-    print(crypto.encryption(message,key))
-    print(crypto.decryption(crypto.encryption(message,key),'abcdefghijklmnop'))
+    key1=Md5('encryption123456988').hash()
+    print(crypto.decryption(crypto.encryption('',key1),key1))
+    
+    
+    # print(crypto.decryption(crypto.encryption(message,key),'abcdefghijklmnop'))
 
 def main():
 #    MESSAGE=input('Enter the message: ')
@@ -802,7 +808,7 @@ main()
 
 end=time()
 
-print(end-start)  
-
+# print(end-start)  
+ 
 # the main problem is the key
 # generate the key using hash function (128 bit key size)
