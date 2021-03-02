@@ -392,12 +392,15 @@ class AES:
             if len(i)==32: 
                 continue
             else: 
-                temp_var=i
-                index=batches.index(i)
-                for j in range(32-len(i)): 
-                    temp_var+='0'
-                batches[index]=temp_var
-        return batches
+                temp=i
+                index=v=batches.index(i)
+                length_to_be_padded=hex(((32-len(temp))//2))[2:]
+                if len(length_to_be_padded)<2: 
+                    length_to_be_padded=(length_to_be_padded[::-1]+'0')[::-1]
+                temp=temp+length_to_be_padded*((32-len(i))//2)
+                batches[index]=temp
+            print(batches)
+        return batches 
     
     # string can contain upto 3125 characters and it may take 0.003 appro
     # to make batches
