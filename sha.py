@@ -1,3 +1,5 @@
+# still onGoing...
+
 class SHA():
 
     __look_up_BinToHex={'0000':'0','0001':'1','0010':'2','0011':'3','0100':'4',
@@ -53,4 +55,3 @@ class SHA():
 
 
     def hash(self,type_of_hash=None): 
-        
