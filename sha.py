@@ -1,4 +1,5 @@
 # still onGoing...
+# sha-1 is completed
 
 class SHA(): 
 
@@ -53,7 +54,7 @@ class SHA():
     
     def __convert_binary_to_hex(self,binary_string): 
         hex_output=''
-        for i in range(0,len(binary_string,4)): 
+        for i in range(0,len(binary_string),4): 
             hex_output+=self.__look_up_BinToHex[binary_string[i:i+4]]
         return hex_output
     
@@ -121,7 +122,8 @@ class SHA():
             if function_type=='maj': 
                 return (first_term & second_term) ^ (first_term & third_term) ^ (second_term & third_term)
     
-    def sha(self,message_blocks):
+    def __sha(self,message_blocks):
+        hash_output=''
         __constants=self.__constants_SHA_1
         for i in __constants:
             __constants[__constants.index(i)]=int('0b'+self.__convert_hex_to_binary(i),2)            
@@ -130,9 +132,13 @@ class SHA():
         buffer_c=int('0b'+self.__convert_hex_to_binary(self.__initial_hash_SHA_1[2]),2)
         buffer_d=int('0b'+self.__convert_hex_to_binary(self.__initial_hash_SHA_1[3]),2)
         buffer_e=int('0b'+self.__convert_hex_to_binary(self.__initial_hash_SHA_1[4]),2)
+        hex_constats=[buffer_a,buffer_b,buffer_c,buffer_d,buffer_e]
         function_output=None
+        flag=False
         for i in message_blocks: 
             message_32_bit_blocks=self.__split_into_blocks(i)
+            if flag==True:
+                buffer_a,buffer_b,buffer_c,buffer_d,buffer_e=hex_constants 
             for j in message_32_bit_blocks: 
                 message_32_bit_blocks[message_32_bit_blocks.index(j)]=int('0b'+j,2)
             temp=[]
@@ -140,45 +146,49 @@ class SHA():
                 if 0<=l<16: 
                     temp.append(message_32_bit_blocks[l])
                 if 16<=l<80:
-                    temp.append(self.__rotate_left_shift(temp[l-3]^temp[l-8]^temp[l-14]^temp[l-16],1))
-            
+                    temp.append((self.__rotate_left_shift(temp[l-3]^temp[l-8]^temp[l-14]^temp[l-16],1))%pow(2,32)) # the value should be in range 2**32
             message_32_bit_blocks=temp
-            print(message_32_bit_blocks) 
-            # for k in range(4*20):
-            #     if 0<=k<20: 
-            #         function_output=self.__functions(buffer_b,buffer_c,buffer_d,function_type='ch',standard='sha')
-            #         constant=__constants[0]
-            #     if 20<=k<40: 
-            #         function_output=self.__functions(buffer_b,buffer_c,buffer_d,function_type='parity',standard='sha')
-            #         constant=__constants[1]
-            #     if 40<=k<60: 
-            #         function_output=self.__functions(buffer_b,buffer_c,buffer_d,function_type='maj',standard='sha')
-            #         constant=__constants[2]
-            #     if 60<=k<80: 
-            #         function_output=self.__functions(buffer_b,buffer_c,buffer_d,function_type='parity',standard='sha')
-            #         k=__constants[3]
-            #     temp=self.__rotate_left_shift(buffer_a,5)
-            #     temp=self.__modulo_addition(function_ouput,temp)
-            #     temp=self.__modulo_addition(temp,buffer_e)
-            #     temp=self.__modulo_addition(temp,constant)
-            #     temp=self.__modulo_addition(temp,message_32_bit_blocks[k])
-
-
-    def test(self): 
+            for k in range(4*20):
+                if 0<=k<20: 
+                    function_output=self.__functions(buffer_b,buffer_c,buffer_d,function_type='ch',standard='sha')
+                    constant=__constants[0]
+                if 20<=k<40: 
+                    function_output=self.__functions(buffer_b,buffer_c,buffer_d,function_type='parity',standard='sha')
+                    constant=__constants[1]
+                if 40<=k<60: 
+                    function_output=self.__functions(buffer_b,buffer_c,buffer_d,function_type='maj',standard='sha')
+                    constant=__constants[2]
+                if 60<=k<80: 
+                    function_output=self.__functions(buffer_b,buffer_c,buffer_d,function_type='parity',standard='sha')
+                    constant=__constants[3]
+                temp=self.__rotate_left_shift(buffer_a,5)
+                temp=self.__modulo_addition(function_output,temp)
+                temp=self.__modulo_addition(temp,buffer_e)
+                temp=self.__modulo_addition(temp,constant)
+                temp=self.__modulo_addition(temp,message_32_bit_blocks[k])
+                buffer_e=buffer_d
+                buffer_d=buffer_c
+                buffer_c=self.__rotate_left_shift(buffer_b,30)
+                buffer_b=buffer_a
+                buffer_a=temp
+            flag=True
+            hex_constats[0]=(buffer_a+hex_constats[0])%pow(2,32)
+            hex_constats[1]=(buffer_b+hex_constats[1])%pow(2,32)
+            hex_constats[2]=(buffer_c+hex_constats[2])%pow(2,32)
+            hex_constats[3]=(buffer_d+hex_constats[3])%pow(2,32)
+            hex_constats[4]=(buffer_e+hex_constats[4])%pow(2,32)
+        for i in hex_constats: 
+            hash_output+=self.__convert_decimal_to_binary(i)
+        hash_output=self.__convert_binary_to_hex(hash_output)
+        return hash_output
+            
+    def SHA_Standard(self): 
         message_in_binary_format=self.__message_to_binary_format()
         message_in_binary_format=self.__append_padding_bits(message_in_binary_format)
         message_in_binary_format=self.__append_length(message_in_binary_format)
         message_possible_blocks=self.__possible_blocks(message_in_binary_format)
-        self.sha(message_possible_blocks)
-        
+        return self.__sha(message_possible_blocks)     
 
- 
-        return
 
-        
-
-# obj=SHA('A')
-# obj.test() 
-
-obj=SHA('python-sha1')
-obj.test()
+obj=SHA('')
+print(obj.SHA_Standard())
