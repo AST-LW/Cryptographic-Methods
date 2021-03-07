@@ -18,7 +18,7 @@ class SHA():
 
     def __init__(self,message): 
         self.message=message
-
+        
     def __check_for_8_bit(self,binary_string): 
         binary_8_bit_format=binary_string
         if len(binary_8_bit_format)<8: 
@@ -182,7 +182,7 @@ class SHA():
         hash_output=self.__convert_binary_to_hex(hash_output)
         return hash_output
             
-    def SHA_Standard(self): 
+    def SHA_Standard_160_bits(self): 
         message_in_binary_format=self.__message_to_binary_format()
         message_in_binary_format=self.__append_padding_bits(message_in_binary_format)
         message_in_binary_format=self.__append_length(message_in_binary_format)
@@ -190,5 +190,6 @@ class SHA():
         return self.__sha(message_possible_blocks)     
 
 
+
 obj=SHA('')
-print(obj.SHA_Standard())
+print(obj.SHA_Standard_160_bits())
