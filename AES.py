@@ -40,7 +40,7 @@
 # at last perform the xor with round key using two_matrix_xor_operation, return matrix
 # continue it the last round...
 
-from time import time,sleep
+from time import time,sleep 
 import sys
 from md5 import Md5
 
@@ -393,13 +393,13 @@ class AES:
                 continue
             else: 
                 temp=i
-                index=v=batches.index(i)
+                index=batches.index(i)
                 length_to_be_padded=hex(((32-len(temp))//2))[2:]
                 if len(length_to_be_padded)<2: 
                     length_to_be_padded=(length_to_be_padded[::-1]+'0')[::-1]
                 temp=temp+length_to_be_padded*((32-len(i))//2)
                 batches[index]=temp
-            print(batches)
+            # print(batches)
         return batches 
     
     # string can contain upto 3125 characters and it may take 0.003 appro
@@ -505,7 +505,7 @@ class AES:
             self.key_list=temp_1
         else:
             # key_hexformat=self.convert_key_to_hexformat(key)
-            print('key on decryption:- '+key)
+            # print('key on decryption:- '+key)
             key_hexformat=key
             key_matrix=self.state_matrix(key_hexformat)
             self.key_decrypt_list.extend(key_matrix)
@@ -788,14 +788,20 @@ class AES:
 def encryption():
     crypto=AES()
     message='hellop'
-    key=Md5('hello').hash()
-    print('key:-'+key) 
-    print(crypto.encryption(message,key))
+    # key=Md5('hello').hash()
+    # print('key:-'+key) 
+    # print(crypto.encryption(message,key))
 
 def decryption(): 
     crypto=AES()
-    key1=Md5('encryption123456988').hash()
-    print(crypto.decryption(crypto.encryption('',key1),key1))
+    message='hi how are+'
+    key=Md5('Github')
+    key1=key.hash()
+    # print(key1)
+    # print(crypto.decryption(crypto.encryption('',key1),key1))
+    encrypted_cipher=crypto.encryption(message,key1)
+    print('encrypted cipher:- '+encrypted_cipher)
+    print('decrypted cipher:- '+crypto.decryption(encrypted_cipher,key1))
     
     
     # print(crypto.decryption(crypto.encryption(message,key),'abcdefghijklmnop'))
