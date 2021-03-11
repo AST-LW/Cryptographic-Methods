@@ -222,7 +222,7 @@ class Md5:
         self.__inner_operation()
         return self.__final_conversion()
          
-obj=Md5('Hello, world!')
-print(obj.hash()) 
+# obj=Md5('Hello, world!')
+# print(obj.hash()) 
 
        
