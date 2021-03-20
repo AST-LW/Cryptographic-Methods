@@ -791,11 +791,11 @@ def encryption():
     # key=Md5('hello').hash()
     # print('key:-'+key) 
     # print(crypto.encryption(message,key))
-
+ 
 def decryption(): 
     crypto=AES()
-    message='hi how are+'
-    key=Md5('Github')
+    message='hi how are'
+    key=Md5('helloworld')
     key1=key.hash()
     # print(key1)
     # print(crypto.decryption(crypto.encryption('',key1),key1))
@@ -817,7 +817,7 @@ main()
 
 end=time()
 
-# print(end-start)  
+print(end-start)        
  
 # the main problem is the key
 # generate the key using hash function (128 bit key size)
