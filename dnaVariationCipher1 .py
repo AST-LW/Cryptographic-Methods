@@ -29,7 +29,16 @@ def dnaVariationCipher1(string,method=None):
         cipher_text=''
         message_in_binary_format=convert_to_ascii(string)
         dna_base=dna_base_conversion(message_in_binary_format)
+        print(dna_base)
         dna_complementary=dna_complementary_rule(dna_base)
+        print(dna_complementary)
         return dna_complementary
+
+    if method=='decrypt': 
+        plaintext=''
+        dna_complementary=dna_complementary_rule(string)
+        print(dna_complementary)
+        # print(dna_base)
   
-print(dnaVariationCipher1('TURN','encrypt'))
+print(dnaVariationCipher1('TURN','encrypt')) 
+print(dnaVariationCipher1('GGGCGGGGGGCTGCAT', 'decrypt'))
