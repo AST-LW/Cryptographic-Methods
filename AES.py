@@ -1,65 +1,3 @@
-# understanding:- 
-# class based programming makes the performace better than functional prgramming
-# each instance has its own variables
-# i can the function which is declared after using it in another function
-# eg: class A:
-#       def a(self): 
-#           self.b()
-        
-#       def b(self): 
-#        print('hello world...')
-# In AES, the message and key are arranged in column matrix,
-# if message is abcd, then it is arranged in [[a,c],[b,d]] not like [[a,b],[c,d]]
-# the arrangement does not matter in sub-bytes and shift-row stage, but
-# matters in mix-columns and key expansion
-
-# process:-
-# instantiate the object with message to be encrypted and key/password as 
-# arguments to the class
-# object.convert_plaintext_to_hexformat(), returns string of hex characters
-# object.state_matrix(string), returns the matrix of 4x4 (lists within list)
-# object.key_expansion(), returns none but creates all the key-expansions... 
-# object.mixColumns(matrix) - returns matrix 
-# object.sub_bytes(matrix) - returns matrix
-# object.shift_rows(matrix) - returns matrix
-# object.two_matrix_xor_operation(matrix_1,matrix_2) returns matrix
-
-# steps:-
-# take the message in plain text and  convert to hex text using the function-
-# convert_plaintext_to_hexformat() returns string
-# after that execute key_expansion() to generate all the keys required for the
-# subsequent rounds, and store it in the list (before storing tanspose the matrix)
-# take the hex format and convert it to matrix-form using the function -
-# state_matrix(string), returns matrix
-# then change the rows -> columns using the function - matrix_transpose(matrix)
-# returns matrix
-# pass the changed matrix to function sub_bytes as an argument to make the
-# s-box substitution, returns matrix
-# then pass it to the shift_rows function as an argument to make row_permutation, returns matrix
-# then pass it to the mixColumns function to make column permutation
-# at last perform the xor with round key using two_matrix_xor_operation, return matrix
-# continue it the last round...
-
-from time import time,sleep 
-import sys
-from md5 import Md5
-
-# AES algorithm:-
-
-# task-1:- take plain text as input and convert into hex format - success 
-#          (convert_plaintext_to_hexformat())
-# task-2:- hex format convert into 4x4 matrix, in other words convert into 2-D
-#          array - success (state_matrix())
-# task-3:- function to calculate the xor operation - success xor_operation()
-# task-4:- finding all the key expansion values - success key_expansion()
-# task-5:- performing the mix columns function... - success mixColumns()
-# task-6:- substitution matrix - success sub_bytes()
-# task-7:- shift rows - success shift_rows() 
-# task-8:- funciton to calculate xor between the matrices - success 
-#          two_matrix_xor_operation()
-
-# AES class:-
-
 class AES: 
     
     look_up_BinToHex={'0000':'0','0001':'1','0010':'2','0011':'3','0100':'4',
@@ -301,8 +239,8 @@ class AES:
         self.key_list=[]
         self.key_decrypt_list=[]
         self.encrypt=False
-# mathematical operation functions:-
 
+# mathematical operation functions:-
     def xor_operation(self,value_1,value_2): 
         value_1=[self.look_up_HexToBin[i] for i in value_1]
         value_2=[self.look_up_HexToBin[i] for i in value_2]
@@ -356,8 +294,7 @@ class AES:
         t_matrix.append(row_4)
         return t_matrix
         
-# plain-text to hex-text conversion:-
-  
+# plain-text to hex-text conversion:- 
     def hex_lookup(self,value): 
         first_half=self.look_up_BinToHex[value[0:len(value)//2]]
         second_half=self.look_up_BinToHex[value[len(value)//2:]]
@@ -374,17 +311,14 @@ class AES:
             value=temp[::-1]
             return self.hex_lookup(value)
         
-    def convert_plaintext_to_hexformat(self): # main method-1
+    def convert_plaintext_to_hexformat(self): 
         final_hexformat=''
         for i in self.message: 
             ascii_value=ord(i)
             final_hexformat+=self.convert_to_hexformat(ascii_value)
         return final_hexformat 
     
-# taking the hex string and forming batches of 16-bytes 
-# then converting them to matrix form 
-
-    def hex_string_batches(self,string):  # code can be improved...
+    def hex_string_batches(self,string): 
         batches=list()
         for i in range(0,len(string),32):
             batches.append(string[i:i+32])
@@ -399,12 +333,9 @@ class AES:
                     length_to_be_padded=(length_to_be_padded[::-1]+'0')[::-1]
                 temp=temp+length_to_be_padded*((32-len(i))//2)
                 batches[index]=temp
-            # print(batches)
         return batches 
     
-    # string can contain upto 3125 characters and it may take 0.003 appro
-    # to make batches
-    def state_matrix(self,hex_string): # main method-2
+    def state_matrix(self,hex_string): 
         string_batches=self.hex_string_batches(hex_string)
         matrix_format=list()
         for i in string_batches: 
@@ -425,10 +356,6 @@ class AES:
         return matrix_format 
         
 # key expansion:-
-
-    # key is taken and in row matrix, so we need to transpose it using 
-    # matrix_traspose to change to column matrix...
-
     def rotate_function(self,word,value): 
         return word[value:]+word[:value]
     
@@ -445,7 +372,6 @@ class AES:
         return sub_word
 
     # operates on words... 16-bytes
-    
     def xor_function(self,first_word,second_word): 
         g_word=list()
         for i,j in zip(first_word,second_word): 
@@ -457,7 +383,6 @@ class AES:
         # we get rot word x1
         # s-box substitution, after that we get y1
         # xor with round list (rcon_words reference)
-        
         rot_word=self.rotate_function(word,1)
         sub_word=self.s_box_substitution(rot_word)
         g_word=self.xor_function(sub_word,self.rcon_words[index])
@@ -476,12 +401,11 @@ class AES:
                 final_hexformat+=self.convert_to_hexformat(ascii_value)
             return final_hexformat
         
-    def key_expansion(self,key=None): # default key=None     # main-method 3 
+    def key_expansion(self,key=None): # default key=None    
         if self.encrypt==True: 
-            # key_hexformat=self.convert_key_to_hexformat()
             key_hexformat=self.key
             key_matrix=self.state_matrix(key_hexformat)
-            self.key_list.extend(key_matrix) # not append, but use extend
+            self.key_list.extend(key_matrix) 
             i=0
             while i<10: 
                 temp=[]
@@ -496,7 +420,7 @@ class AES:
                 temp.append(word_33)
                 temp.append(word_44)
                 word_11,word_22,word_33,word_44=None,None,None,None
-                self.key_list.append(temp)  # error made here 
+                self.key_list.append(temp)  
                 temp=[]
                 i+=1
             temp_1=[]
@@ -504,8 +428,6 @@ class AES:
                 temp_1.append(self.matrix_transpose(i))
             self.key_list=temp_1
         else:
-            # key_hexformat=self.convert_key_to_hexformat(key)
-            # print('key on decryption:- '+key)
             key_hexformat=key
             key_matrix=self.state_matrix(key_hexformat)
             self.key_decrypt_list.extend(key_matrix)
@@ -530,20 +452,17 @@ class AES:
             for i in self.key_decrypt_list:
                 temp_1.append(self.matrix_transpose(i))
             self.key_decrypt_list=temp_1
-            
     # all the keys for all the rounds are stored in key_list
     
-# sub-bytes (substitution):-
-    
-    # the function below s_box_substitution_inverse was written coz, while key expansion
-    # we use s_box look up not inverse s_box...
-
+# sub-bytes (substitution):- 
     def s_box_substitution_inverse(self,word): 
             sub_word=list()
+            # print(word)
             for i in word:
                 temp=''
                 _x,_y=i[0],i[1]
                 temp=self.s_box_inverse_look_up[_x][_y]
+                # print(temp)
                 sub_word.append(temp)
             return sub_word
 
@@ -560,8 +479,7 @@ class AES:
             return substituted_matrix
 
 # shift_rows:-
-    
-    def shift_rows(self,matrix):   # main method-5
+    def shift_rows(self,matrix):   
         shifted_matrix=list()
         if self.encrypt==True:
             for i in range(len(matrix)):
@@ -573,7 +491,6 @@ class AES:
             return shifted_matrix
         
 # mix columns method for encryption:-
-    
     def helper_function(self,hex_string):
         value_1=hex_string[0]
         value_2=hex_string[1]
@@ -586,7 +503,7 @@ class AES:
         xor_result_2=self.xor_operation(temp[2],temp[3])
         return self.xor_operation(xor_result_1,xor_result_2)
         
-    def mixColumns(self,matrix):     # main method-6
+    def mixColumns(self,matrix):    
         # the multiplicaiton matrix used in AES-128 bit key during encryption
         # 02 03 01 01
         # 01 02 03 01 
@@ -616,12 +533,7 @@ class AES:
                     temp=[]
                 final_result.append(inner_list)
                 inner_list=[]  
-            return self.matrix_transpose(final_result) #error made here ...
-        
-            # during decryption i was getting error in ireducible polynomial
-            # so i searched for various resources,and found look_up table 
-            # for galois field multiplicaiton...
-            # the same look_up tables can be used for encryption also...
+            return self.matrix_transpose(final_result)
         
     def hex_decimal(self,element):  # hex number to decimal number
         value=''.join([self.look_up_HexToBin[i] for i in element])[::-1]
@@ -663,7 +575,7 @@ class AES:
         temp=[]
         for i,j in zip(block_1,block_2): 
             L_value1=self.L_box(i)
-            if j=='00':             # max time spent 7 hrs when anything multiplied by 0 results in 0
+            if j=='00':             
                 temp.append('00')
                 continue
             L_value2=self.L_box(j)
@@ -695,24 +607,6 @@ class AES:
         return final_matrix
             
 # encryption:-
-
-    # outputs the final cipher-text...
-    
-    def binary_to_decimal(self,value): 
-        temp=[int(i) for i in value][::-1]
-        sum_=0
-        for i in range(len(temp)):
-            sum_+=pow(2,i)*temp[i]
-        return sum_
-                
-    def convert_hex_to_plaintext(self,matrix): 
-        final_ciphertext=''
-        for i in matrix: 
-            for j in i: 
-                decimal=self.binary_to_decimal(''.join([self.look_up_HexToBin[k] for k in j]))
-                final_ciphertext+=chr(decimal)
-        return final_ciphertext
-    
     def matrix_to_string(self,matrix): 
         temp=''
         for i in matrix: 
@@ -725,7 +619,6 @@ class AES:
         self.message=message
         self.key=key
         hex_string=self.convert_plaintext_to_hexformat()   
-        print('message in hex format:-'+hex_string)             
         input_state_matrix=list()
         for block in self.state_matrix(hex_string):
             input_state_matrix.append(self.matrix_transpose(block))
@@ -750,13 +643,10 @@ class AES:
             temp=''
             round_input=''
         self.key_list=[]   # resetting the key list to None 
-        self.encrypt=False
-        # print(self.key_decrypt_list) # this list is empty when encrypting...
-        
+        self.encrypt=False        
         return cipher_text
 
-# decryption:-
-    
+# decryption:- 
     def decryption(self,cipher_text,key):  # may be each person with different key...
         cipher_state_matrix=[]
         for block in self.state_matrix(cipher_text):
@@ -770,10 +660,10 @@ class AES:
             sub=self. sub_bytes(shift)
             round_input=self.two_matrix_xor_operation(sub, key_expansion_list[9])
             i=8
-            while i>=0:                 
-                mix=self.inverse_mixColumns(round_input)                
-                shift=self.shift_rows(mix)                
-                sub=self.sub_bytes(shift)                
+            while i>=0:  
+                mix=self.inverse_mixColumns(round_input) 
+                shift=self.shift_rows(mix)    
+                sub=self.sub_bytes(shift)             
                 round_input=self.two_matrix_xor_operation(sub,key_expansion_list[i])
                 i-=1  
             shift=self.shift_rows(mix)
@@ -784,40 +674,5 @@ class AES:
             message+=temp
             self.key_decrypt_list=[]  # resetting the key to None...
         return message    
-        
-def encryption():
-    crypto=AES()
-    message='hellop'
-    # key=Md5('hello').hash()
-    # print('key:-'+key) 
-    # print(crypto.encryption(message,key))
- 
-def decryption(): 
-    crypto=AES()
-    message='hi how are' 
-    key=Md5('helloworld')
-    key1=key.hash()
-    # print(key1)
-    # print(crypto.decryption(crypto.encryption('',key1),key1))
-    encrypted_cipher=crypto.encryption(message,key1)
-    print('encrypted cipher:- '+encrypted_cipher)
-    print('decrypted cipher:- '+crypto.decryption(encrypted_cipher,key1))
-    
-    
-    # print(crypto.decryption(crypto.encryption(message,key),'abcdefghijklmnop'))
 
-def main():
-#    MESSAGE=input('Enter the message: ')
-#    KEY=input('Enter the unique code')
-    # encryption()
-    decryption() 
-start=time()
 
-main()
-
-end=time()
-
-print(end-start)        
- 
-# the main problem is the key
-# generate the key using hash function (128 bit key size)
